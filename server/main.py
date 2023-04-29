@@ -1,10 +1,13 @@
 import os
 from typing import Optional
+
 import uvicorn
-from fastapi import FastAPI, File, Form, HTTPException, Depends, Body, UploadFile
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Body, Depends, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
 
+from datastore.factory import get_datastore
 from models.api import (
     DeleteRequest,
     DeleteResponse,
@@ -13,10 +16,8 @@ from models.api import (
     UpsertRequest,
     UpsertResponse,
 )
-from datastore.factory import get_datastore
-from services.file import get_document_from_file
-
 from models.models import DocumentMetadata, Source
+from services.file import get_document_from_file
 
 bearer_scheme = HTTPBearer()
 BEARER_TOKEN = os.environ.get("BEARER_TOKEN")
@@ -41,6 +42,15 @@ sub_app = FastAPI(
     dependencies=[Depends(validate_token)],
 )
 app.mount("/sub", sub_app)
+
+# Add CORS middleware to the app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post(
