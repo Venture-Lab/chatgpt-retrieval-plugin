@@ -1,4 +1,6 @@
 import os
+import tempfile
+import zipfile
 from typing import Optional
 
 import uvicorn
@@ -51,6 +53,45 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.post("/upsert-directory", response_model=UpsertResponse)
+async def upsert_directory_endpoint(
+    zip_file: UploadFile = File(...),
+    metadata: Optional[str] = Form(None),
+) -> UpsertResponse:
+    try:
+        metadata_obj = (
+            DocumentMetadata.parse_raw(metadata)
+            if metadata
+            else DocumentMetadata(source=Source.file)
+        )
+    except:
+        metadata_obj = DocumentMetadata(source=Source.file)
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        zip_path = os.path.join(temp_dir, zip_file.filename)
+        with open(zip_path, "wb") as f:
+            f.write(await zip_file.read())
+
+        with zipfile.ZipFile(zip_path, "r") as zf:
+            zf.extractall(temp_dir)
+
+    documents = []
+    for root, _, files in os.walk(temp_dir):
+        for name in files:
+            file_path = os.path.join(root, name)
+            with open(file_path, "rb") as file:
+                upload_file = UploadFile(name, file)
+                document = await get_document_from_file(upload_file, metadata_obj)
+                documents.append(document)
+
+    try:
+        ids = await datastore.upsert(documents)
+        return UpsertResponse(ids=ids)
+    except Exception as e:
+        print("Error:", e)
+        raise HTTPException(status_code=500, detail=f"str({e})")
 
 
 @app.post(
