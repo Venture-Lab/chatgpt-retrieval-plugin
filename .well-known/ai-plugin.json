@@ -10,10 +10,10 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://your-app-url.com/.well-known/openapi.yaml",
+    "url": "https://chatgpt-retrieval-plugin-i5q4toeghq-uw.a.run.app/.well-known/openapi.yaml",
     "has_user_authentication": false
   },
-  "logo_url": "https://your-app-url.com/.well-known/logo.png",
-  "contact_email": "hello@contact.com", 
+  "logo_url": "https://chatgpt-retrieval-plugin-i5q4toeghq-uw.a.run.app/.well-known/logo.png",
+  "contact_email": "stefanb0305@gmail.com",
   "legal_info_url": "http://example.com/legal-info"
 }

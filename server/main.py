@@ -46,7 +46,7 @@ app.mount("/sub", sub_app)
 # Add CORS middleware to the app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://venture-lab-1.wl.r.appspot.com"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
