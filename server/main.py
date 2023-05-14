@@ -51,6 +51,7 @@ app.add_middleware(
     allow_origins=[
         "https://chatgpt-retrieval-plugin-i5q4toeghq-uw.a.run.app",
         "https://venture-lab-1.wl.r.appspot.com",
+        "https://platform-frontend-i5q4toeghq-uw.a.run.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
