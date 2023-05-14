@@ -48,7 +48,10 @@ app.mount("/sub", sub_app)
 # Add CORS middleware to the app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://chatgpt-retrieval-plugin-i5q4toeghq-uw.a.run.app",
+        "https://venture-lab-1.wl.r.appspot.com",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
