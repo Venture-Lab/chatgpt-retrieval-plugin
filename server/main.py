@@ -20,6 +20,9 @@ from models.api import (
 )
 from models.models import DocumentMetadata, Source
 from services.file import get_document_from_file
+from dotenv import load_dotenv
+
+load_dotenv()
 
 bearer_scheme = HTTPBearer()
 BEARER_TOKEN = os.environ.get("BEARER_TOKEN")
