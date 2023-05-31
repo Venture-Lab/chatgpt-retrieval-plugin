@@ -8,6 +8,7 @@ from fastapi import Body, Depends, FastAPI, File, Form, HTTPException, UploadFil
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
+from loguru import logger
 
 from datastore.factory import get_datastore
 from models.api import (
@@ -124,7 +125,7 @@ async def upsert_file(
         ids = await datastore.upsert([document])
         return UpsertResponse(ids=ids)
     except Exception as e:
-        print("Error:", e)
+        logger.error(e)
         raise HTTPException(status_code=500, detail=f"str({e})")
 
 
@@ -139,7 +140,7 @@ async def upsert(
         ids = await datastore.upsert(request.documents)
         return UpsertResponse(ids=ids)
     except Exception as e:
-        print("Error:", e)
+        logger.error(e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
 
@@ -156,7 +157,7 @@ async def query_main(
         )
         return QueryResponse(results=results)
     except Exception as e:
-        print("Error:", e)
+        logger.error(e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
 
@@ -175,7 +176,7 @@ async def query(
         )
         return QueryResponse(results=results)
     except Exception as e:
-        print("Error:", e)
+        logger.error(e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
 
@@ -199,7 +200,7 @@ async def delete(
         )
         return DeleteResponse(success=success)
     except Exception as e:
-        print("Error:", e)
+        logger.error(e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
 
